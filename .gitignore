@@ -1,0 +1,33 @@
+.DS_Store
+Thumbs.db
+
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+
+# Laravel
+backend/vendor/
+backend/node_modules/
+backend/public/build/
+backend/public/hot
+backend/storage/*.key
+backend/storage/app/public/
+backend/bootstrap/cache/*.php
+backend/.env
+backend/.phpunit.result.cache
+
+# Flutter / Dart
+patrol_guard_mobile/.dart_tool/
+patrol_guard_mobile/.flutter-plugins
+patrol_guard_mobile/.flutter-plugins-dependencies
+patrol_guard_mobile/.packages
+patrol_guard_mobile/.pub-cache/
+patrol_guard_mobile/.pub/
+patrol_guard_mobile/build/
+patrol_guard_mobile/android/.gradle/
+patrol_guard_mobile/android/local.properties
+patrol_guard_mobile/ios/Flutter/.last_build_id
+
+# IDE
+.idea/
+.vscode/

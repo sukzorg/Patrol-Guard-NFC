@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patrol Guard NFC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="ambient ambient-left"></div>
+      <div class="ambient ambient-right"></div>
+
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">MVP Front End Prototype</p>
+          <h1>Patrol Guard NFC</h1>
+        </div>
+
+        <div class="topbar-actions">
+          <span class="pill pill-outline">Offline-First</span>
+          <span class="pill pill-soft">Android Focused</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero card surface-grid">
+          <div class="hero-copy">
+            <p class="section-tag">Security Operations</p>
+            <h2>Digitalisasi patroli security dengan alur scan NFC yang jelas dan mudah dipantau.</h2>
+            <p class="hero-text">
+              Prototype ini merangkum kebutuhan di PRD: login guard, mulai shift, scan checkpoint,
+              status offline, antrean sinkronisasi, dan monitoring supervisor dalam satu tampilan.
+            </p>
+
+            <div class="hero-actions">
+              <button class="primary-button" id="scanButton">Scan Checkpoint Berikutnya</button>
+              <button class="secondary-button" id="syncButton">Sinkronkan Sekarang</button>
+            </div>
+
+            <div class="hero-highlights">
+              <article class="highlight-card">
+                <span>01</span>
+                <strong>Login dan shift</strong>
+                <p>Guard masuk, pilih shift, lalu mulai sesi patroli dalam satu langkah ringkas.</p>
+              </article>
+              <article class="highlight-card">
+                <span>02</span>
+                <strong>Scan saat offline</strong>
+                <p>Log tetap tersimpan lokal dan akan berubah status ketika koneksi kembali normal.</p>
+              </article>
+              <article class="highlight-card">
+                <span>03</span>
+                <strong>Supervisor visibility</strong>
+                <p>Progress patroli, antrean sync, dan status checkpoint tersaji real-time.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="hero-panel">
+            <div class="signal-card">
+              <div class="signal-copy">
+                <p>Network</p>
+                <strong id="networkStatusLabel">Online</strong>
+              </div>
+              <button class="toggle-button" id="networkButton" aria-pressed="false">
+                Alihkan Koneksi
+              </button>
+            </div>
+
+            <div class="summary-list">
+              <div>
+                <span>Active Session</span>
+                <strong id="sessionBadge">Belum dimulai</strong>
+              </div>
+              <div>
+                <span>Sync Queue</span>
+                <strong id="queueBadge">0 log pending</strong>
+              </div>
+              <div>
+                <span>Coverage</span>
+                <strong id="coverageBadge">0/5 checkpoint</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <article class="card app-panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-tag">Guard Console</p>
+                <h3>Flow petugas lapangan</h3>
+              </div>
+              <span class="pill" id="guardStatePill">Menunggu login</span>
+            </div>
+
+            <form class="login-card" id="loginForm">
+              <label>
+                <span>Email</span>
+                <input id="emailInput" type="email" value="guard@patrol.id" required />
+              </label>
+              <label>
+                <span>Password</span>
+                <input id="passwordInput" type="password" value="patrol123" required />
+              </label>
+              <div class="form-row">
+                <label>
+                  <span>Shift</span>
+                  <select id="shiftSelect">
+                    <option value="Pagi">Pagi</option>
+                    <option value="Sore">Sore</option>
+                    <option value="Malam">Malam</option>
+                  </select>
+                </label>
+                <button class="primary-button" type="submit" id="loginButton">Masuk & Mulai</button>
+              </div>
+            </form>
+
+            <div class="operator-card">
+              <div>
+                <p class="muted-label">Guard aktif</p>
+                <strong id="operatorName">Belum login</strong>
+              </div>
+              <div>
+                <p class="muted-label">Shift</p>
+                <strong id="operatorShift">-</strong>
+              </div>
+              <div>
+                <p class="muted-label">Session ID</p>
+                <strong id="sessionIdLabel">-</strong>
+              </div>
+            </div>
+
+            <div class="checkpoint-card">
+              <div class="panel-header compact">
+                <div>
+                  <p class="section-tag">Checkpoint Route</p>
+                  <h3>Urutan patroli hari ini</h3>
+                </div>
+                <button class="secondary-button" id="resetButton" type="button">Reset Demo</button>
+              </div>
+
+              <div class="checkpoint-list" id="checkpointList"></div>
+            </div>
+
+            <div class="activity-card">
+              <div class="panel-header compact">
+                <div>
+                  <p class="section-tag">Activity Feed</p>
+                  <h3>Riwayat scan terbaru</h3>
+                </div>
+                <span class="pill pill-outline" id="lastScanLabel">Belum ada scan</span>
+              </div>
+
+              <div class="activity-list" id="activityList"></div>
+            </div>
+          </article>
+
+          <article class="card monitor-panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-tag">Supervisor Board</p>
+                <h3>Monitoring patroli sederhana</h3>
+              </div>
+              <span class="pill pill-soft" id="syncHealthPill">Sistem stabil</span>
+            </div>
+
+            <div class="kpi-grid">
+              <article class="kpi-card">
+                <span>Active Guards</span>
+                <strong id="activeGuardKpi">0</strong>
+                <p>Sesi patroli yang sedang berjalan.</p>
+              </article>
+              <article class="kpi-card">
+                <span>Pending Sync</span>
+                <strong id="pendingKpi">0</strong>
+                <p>Log lokal yang menunggu koneksi server.</p>
+              </article>
+              <article class="kpi-card">
+                <span>Coverage</span>
+                <strong id="coverageKpi">0%</strong>
+                <p>Persentase checkpoint yang sudah dikunjungi.</p>
+              </article>
+              <article class="kpi-card">
+                <span>Last Upload</span>
+                <strong id="lastUploadKpi">-</strong>
+                <p>Waktu sinkronisasi terbaru dari device guard.</p>
+              </article>
+            </div>
+
+            <div class="monitor-grid">
+              <section class="timeline-card">
+                <div class="panel-header compact">
+                  <div>
+                    <p class="section-tag">Live Session</p>
+                    <h3>Progress sesi patroli</h3>
+                  </div>
+                  <span class="pill" id="timelineStatusPill">Idle</span>
+                </div>
+
+                <div class="progress-wrap">
+                  <div class="progress-copy">
+                    <span>Route completion</span>
+                    <strong id="progressLabel">0%</strong>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-bar" id="progressBar"></div>
+                  </div>
+                </div>
+
+                <div class="timeline-list" id="timelineList"></div>
+              </section>
+
+              <section class="queue-card">
+                <div class="panel-header compact">
+                  <div>
+                    <p class="section-tag">Offline Queue</p>
+                    <h3>Status sinkronisasi log</h3>
+                  </div>
+                  <span class="pill pill-outline" id="queueModePill">Server reachable</span>
+                </div>
+
+                <div class="queue-stats">
+                  <article>
+                    <span>Pending</span>
+                    <strong id="pendingCount">0</strong>
+                  </article>
+                  <article>
+                    <span>Synced</span>
+                    <strong id="syncedCount">0</strong>
+                  </article>
+                  <article>
+                    <span>Failed</span>
+                    <strong id="failedCount">0</strong>
+                  </article>
+                </div>
+
+                <div class="sync-copy" id="syncNarrative">
+                  Semua log sudah sinkron dengan server pusat.
+                </div>
+              </section>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
